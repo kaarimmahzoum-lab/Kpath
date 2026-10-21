@@ -1,12 +1,13 @@
 {
   "expo": {
     "name": "K-Path",
-    "slug": "kpath",
+    "slug": "Kpath",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "android": {
       "package": "com.kpath.app"
-    }
+    },
+    "plugins": []
   }
 }
