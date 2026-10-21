@@ -1,344 +1,44 @@
-import React, { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-  StatusBar,
-  Dimensions,
-  TextInput,
-  Image
-} from 'react-native';
+name: Build Android APK
 
-const { width } = Dimensions.get('window');
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
-export default function App() {
-  const [activeTab, setActiveTab] = useState('vtc');
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CI: 1
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#0B0F19" />
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
-      {/* Header & Brand Identity */}
-      <View style={styles.header}>
-        <View style={styles.brandContainer}>
-          <View style={styles.logoBadge}>
-            <Text style={styles.logoBadgeText}>K</Text>
-          </View>
-          <View>
-            <Text style={styles.brandTitle}>K-PATH</Text>
-            <Text style={styles.brandSubtitle}>SUPER-APP</Text>
-          </View>
-        </View>
-        <TouchableOpacity style={styles.sosButton}>
-          <Text style={styles.sosText}>SOS</Text>
-        </TouchableOpacity>
-      </View>
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
 
-      {/* Search Bar */}
-      <View style={styles.searchContainer}>
-        <Text style={styles.searchIcon}>🔍</Text>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="فين بغيتي تمشي اليوم؟"
-          placeholderTextColor="#6C757D"
-        />
-      </View>
+      - name: Install dependencies
+        run: npm install
 
-      {/* Navigation Tabs */}
-      <View style={styles.tabContainer}>
-        <TouchableOpacity
-          style={[styles.tab, activeTab === 'vtc' && styles.activeTab]}
-          onPress={() => setActiveTab('vtc')}>
-          <Text style={[styles.tabText, activeTab === 'vtc' && styles.activeTabText]}>
-            🚕 VTC & Taxis
-          </Text>
-        </TouchableOpacity>
+      - name: Prebuild Expo Android Project
+        run: npx expo prebuild --platform android --clean
 
-        <TouchableOpacity
-          style={[styles.tab, activeTab === 'rent' && styles.activeTab]}
-          onPress={() => setActiveTab('rent')}>
-          <Text style={[styles.tabText, activeTab === 'rent' && styles.activeTabText]}>
-            🚗 Location
-          </Text>
-        </TouchableOpacity>
+      - name: Build Android APK with Gradle
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon
 
-        <TouchableOpacity
-          style={[styles.tab, activeTab === 'hotel' && styles.activeTab]}
-          onPress={() => setActiveTab('hotel')}>
-          <Text style={[styles.tabText, activeTab === 'hotel' && styles.activeTabText]}>
-            🏨 Hôtels & Villas
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* VTC Section */}
-        {activeTab === 'vtc' && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>مقارنة أسعار VTC & النقل</Text>
-
-            <View style={styles.card}>
-              <View style={styles.cardHeader}>
-                <Text style={styles.cardTitle}>InDrive</Text>
-                <Text style={styles.priceTag}>120 - 150 MAD</Text>
-              </View>
-              <Text style={styles.cardSub}>ETA: 6 mins • تفاوض مباشر</Text>
-              <TouchableOpacity style={styles.actionButton}>
-                <Text style={styles.actionButtonText}>طلب الرحلة عبر InDrive</Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.card}>
-              <View style={styles.cardHeader}>
-                <Text style={styles.cardTitle}>Yango (Eco)</Text>
-                <Text style={styles.priceTag}>140 MAD</Text>
-              </View>
-              <Text style={styles.cardSub}>ETA: 3 mins • توصيل سريع</Text>
-              <TouchableOpacity style={styles.actionButton}>
-                <Text style={styles.actionButtonText}>حجز مباشر في K-Path</Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.card}>
-              <View style={styles.cardHeader}>
-                <Text style={styles.cardTitle}>Grand Taxi (Shared)</Text>
-                <Text style={styles.priceTag}>20 MAD</Text>
-              </View>
-              <Text style={styles.cardSub}>ETA: 10 mins • خطوط شهرية/يومية</Text>
-              <TouchableOpacity style={[styles.actionButton, styles.secondaryButton]}>
-                <Text style={styles.secondaryButtonText}>حجز مقعد</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-
-        {/* Car Rental Section */}
-        {activeTab === 'rent' && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>كراء السيارات بدون وسيط</Text>
-
-            <View style={styles.card}>
-              <Text style={styles.cardTitle}>Dacia Logan / Sandero</Text>
-
-              <Text style={styles.cardSub}>من 250 MAD / اليوم • Manuelle</Text>
-
-              <TouchableOpacity style={[styles.actionButton, styles.whatsappButton]}>
-                <Text style={styles.actionButtonText}>💬 تواصل مباشر عبر واتساب</Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.card}>
-              <Text style={styles.cardTitle}>Clio 5 / Peugeot 208</Text>
-
-              <Text style={styles.cardSub}>من 350 MAD / اليوم • Automatique</Text>
-
-              <TouchableOpacity style={[styles.actionButton, styles.whatsappButton]}>
-                <Text style={styles.actionButtonText}>💬 تواصل مباشر عبر واتساب</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-
-        {/* Hotels & Stays Section */}
-        {activeTab === 'hotel' && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>استوديو، فنادق وفيلات فاخرة</Text>
-
-            <View style={styles.card}>
-              <Text style={styles.cardTitle}>Studio Modern - Casablanca Center</Text>
-
-              <Text style={styles.cardSub}>من 450 MAD / ليلة • Wifi Fast • Self Check-in</Text>
-
-              <TouchableOpacity style={styles.actionButton}>
-                <Text style={styles.actionButtonText}>عرض التفاصيل والحجز</Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.card}>
-              <Text style={styles.cardTitle}>Villa de Luxe avec Piscine</Text>
-
-              <Text style={styles.cardSub}>من 2500 MAD / ليلة • Mâarif / Anfa</Text>
-
-              <TouchableOpacity style={styles.actionButton}>
-                <Text style={styles.actionButtonText}>حجز الفيلة</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0B0F19',
-  },
-  header: {
-    flexDirection: 'row-reverse',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#1F293D',
-  },
-  brandContainer: {
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
-  },
-  logoBadge: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
-    backgroundColor: '#00A8FF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 10,
-  },
-  logoBadgeText: {
-    color: '#0B0F19',
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  brandTitle: {
-    color: '#FFFFFF',
-    fontSize: 20,
-    fontWeight: 'bold',
-    letterSpacing: 1.5,
-  },
-  brandSubtitle: {
-    color: '#00A8FF',
-    fontSize: 10,
-    fontWeight: '600',
-    letterSpacing: 2,
-  },
-  sosButton: {
-    backgroundColor: '#FF6B00',
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  sosText: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-    fontSize: 12,
-  },
-  searchContainer: {
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
-    backgroundColor: '#161F33',
-    marginHorizontal: 20,
-    marginVertical: 15,
-    borderRadius: 12,
-    paddingHorizontal: 15,
-    borderWidth: 1,
-    borderColor: '#2A3859',
-  },
-  searchIcon: {
-    fontSize: 16,
-    marginLeft: 10,
-  },
-  searchInput: {
-    flex: 1,
-    color: '#FFFFFF',
-    paddingVertical: 12,
-    textAlign: 'right',
-  },
-  tabContainer: {
-    flexDirection: 'row-reverse',
-    justifyContent: 'space-around',
-    paddingHorizontal: 10,
-    marginBottom: 10,
-  },
-  tab: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 20,
-    backgroundColor: '#161F33',
-  },
-  activeTab: {
-    backgroundColor: '#00A8FF',
-  },
-  tabText: {
-    color: '#A0AEC0',
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  activeTabText: {
-    color: '#0B0F19',
-    fontWeight: 'bold',
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 30,
-  },
-  section: {
-    marginTop: 10,
-  },
-  sectionTitle: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    textAlign: 'right',
-  },
-  card: {
-    backgroundColor: '#161F33',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 15,
-    borderWidth: 1,
-    borderColor: '#2A3859',
-  },
-  cardHeader: {
-    flexDirection: 'row-reverse',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  cardTitle: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'right',
-  },
-  priceTag: {
-    color: '#00A8FF',
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
-  cardSub: {
-    color: '#A0AEC0',
-    fontSize: 12,
-    marginBottom: 15,
-    textAlign: 'right',
-  },
-  actionButton: {
-    backgroundColor: '#00A8FF',
-    paddingVertical: 12,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  actionButtonText: {
-    color: '#0B0F19',
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
-  secondaryButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: '#00A8FF',
-  },
-  secondaryButtonText: {
-    color: '#00A8FF',
-    fontWeight: 'bold',
-  },
-  whatsappButton: {
-    backgroundColor: '#25D366',
-  },
-});
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: android/app/build/outputs/apk/release/app-release.apk
