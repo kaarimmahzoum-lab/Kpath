@@ -28,16 +28,21 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Clean previous native files
+      - name: Clean native Android folder
         run: rm -rf android
 
       - name: Prebuild Expo Android Project
         run: npx expo prebuild --platform android --clean
 
-      - name: Build Android APK with Gradle
+      - name: Clean Gradle Cache
         run: |
           cd android
           chmod +x gradlew
+          ./gradlew clean
+
+      - name: Build Android APK with Gradle
+        run: |
+          cd android
           ./gradlew assembleRelease --no-daemon
 
       - name: Upload APK Artifact
