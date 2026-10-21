@@ -34,15 +34,10 @@ jobs:
       - name: Prebuild Expo Android Project
         run: npx expo prebuild --platform android --clean
 
-      - name: Clean Gradle Cache
-        run: |
-          cd android
-          chmod +x gradlew
-          ./gradlew clean
-
       - name: Build Android APK with Gradle
         run: |
           cd android
+          chmod +x gradlew
           ./gradlew assembleRelease --no-daemon
 
       - name: Upload APK Artifact
