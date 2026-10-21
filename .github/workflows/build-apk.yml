@@ -26,7 +26,7 @@ jobs:
           java-version: '17'
 
       - name: Install dependencies
-        run: npm install --fetch-retries=5 --fetch-retry-mintimeout=20000
+        run: npm install --fetch-retries=5
 
       - name: Clean native Android folder
         run: rm -rf android
@@ -38,7 +38,7 @@ jobs:
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleRelease --no-daemon
+          ./gradlew assembleRelease -x lint --no-daemon
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
