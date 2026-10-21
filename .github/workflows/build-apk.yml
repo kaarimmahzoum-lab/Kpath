@@ -28,8 +28,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Clean previous native files
+        run: rm -rf android
+
       - name: Prebuild Expo Android Project
-        run: npx expo prebuild --platform android --clean --no-install
+        run: npx expo prebuild --platform android --clean
 
       - name: Build Android APK with Gradle
         run: |
