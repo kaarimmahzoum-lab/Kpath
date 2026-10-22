@@ -30,6 +30,9 @@ jobs:
           npm install -g eas-cli
           npm install
 
+      - name: 🔗 Link Expo Project
+        run: eas init --account karim-path --non-interactive || true
+
       - name: 🚀 Build Android APK
         run: eas build --platform android --profile preview --non-interactive
 
