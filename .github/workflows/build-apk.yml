@@ -34,6 +34,11 @@ jobs:
       - name: Prebuild Expo Android Project
         run: npx expo prebuild --platform android --clean
 
+      - name: Fix Missing SplashScreen Color
+        run: |
+          mkdir -p android/app/src/main/res/values
+          echo '<resources><color name="splashscreen_background">#0B0F19</color></resources>' > android/app/src/main/res/values/colors.xml
+
       - name: Build Android APK with Gradle
         run: |
           cd android
