@@ -20,9 +20,6 @@
         "backgroundColor": "#0B0F19"
       },
       "package": "com.kpath.app"
-    },
-    "web": {
-      "favicon": "./icon.png"
     }
   }
 }
