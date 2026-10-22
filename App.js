@@ -1,74 +1,38 @@
-import React, { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  ScrollView,
-  SafeAreaView,
-  StatusBar,
-  Dimensions,
-} from 'react-native';
-
-const { width } = Dimensions.get('window');
+import React from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, StatusBar } from 'react-native';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('Home');
-
-  const services = [
-    { id: '1', title: 'VTC & Chauffeur', icon: '🚗', desc: 'Transport privé de luxe' },
-    { id: '2', title: 'Car Rental', icon: '🔑', desc: 'Location de voitures' },
-    { id: '3', title: 'Hotels & Villas', icon: '🏰', desc: 'Réservations exclusives' },
-  ];
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#0B0F19" />
-
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.logoContainer}>
-          <Text style={styles.logoK}>K</font></Text>
-          <Text style={styles.logoPath}>PATH</Text>
-        </View>
-        <Text style={styles.subtitle}>PREMIUM SERVICES</Text>
-      </View>
-
-      <ScrollView contentContainerStyle={styles.content}>
-        {/* Banner */}
-        <View style={styles.banner}>
-          <Text style={styles.bannerTitle}>Bienvenue sur K-Path</Text>
-          <Text style={styles.bannerSub}>Votre plateforme de réservation VIP</Text>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.logoK}>K<Text style={styles.logoPath}>PATH</Text></Text>
+          <Text style={styles.subTitle}>PREMIUM SERVICES</Text>
         </View>
 
-        {/* Services List */}
-        <Text style={styles.sectionTitle}>Nos Services</Text>
-        {services.map((item) => (
-          <TouchableOpacity key={item.id} style={styles.card} activeOpacity={0.8}>
-            <Text style={styles.cardIcon}>{item.icon}</Text>
-            <View style={styles.cardInfo}>
-              <Text style={styles.cardTitle}>{item.title}</Text>
-              <Text style={styles.cardDesc}>{item.desc}</Text>
-            </View>
-            <Text style={styles.arrow}>➔</Text>
-          </TouchableOpacity>
-        ))}
+        {/* Welcome Section */}
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>مرحباً بك في K-Path</Text>
+          <Text style={styles.cardText}>منصة الخدمات الذكية والنقل والتنقل الحديث.</Text>
+        </View>
+
+        {/* Services */}
+        <TouchableOpacity style={[styles.serviceButton, { borderColor: '#00A8FF' }]}>
+          <Text style={styles.buttonText}>🚗 حجز VTC / سيارات أوجرة</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={[styles.serviceButton, { borderColor: '#FF6B00' }]}>
+          <Text style={styles.buttonText}>🔑 كراء السيارات (Car Rental)</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={[styles.serviceButton, { borderColor: '#00A8FF' }]}>
+          <Text style={styles.buttonText}>🏨 الفنادق والفيلات (Hotels & Villas)</Text>
+        </TouchableOpacity>
+
       </ScrollView>
-
-      {/* Navigation */}
-      <View style={styles.navBar}>
-        {['Home', 'Reservations', 'Profile'].map((tab) => (
-          <TouchableOpacity
-            key={tab}
-            onPress={() => setActiveTab(tab)}
-            style={styles.navItem}
-          >
-            <Text style={[styles.navText, activeTab === tab && styles.activeNavText]}>
-              {tab === 'Home' ? 'Accueil' : tab === 'Reservations' ? 'Réservations' : 'Profil'}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
     </SafeAreaView>
   );
 }
@@ -78,110 +42,62 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#0B0F19',
   },
-  header: {
-    paddingTop: 40,
-    paddingBottom: 20,
+  scrollContent: {
+    padding: 20,
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#1F293D',
   },
-  logoContainer: {
-    flexDirection: 'row',
+  header: {
     alignItems: 'center',
+    marginVertical: 30,
   },
   logoK: {
-    fontSize: 32,
-    fontWeight: '900',
+    fontSize: 42,
+    fontWeight: 'bold',
     color: '#00A8FF',
   },
   logoPath: {
-    fontSize: 32,
-    fontWeight: '900',
     color: '#FFFFFF',
-    marginLeft: 4,
   },
-  subtitle: {
-    fontSize: 10,
+  subTitle: {
+    fontSize: 12,
     color: '#FF6B00',
-    letterSpacing: 3,
-    marginTop: 2,
     fontWeight: 'bold',
-  },
-  content: {
-    padding: 20,
-  },
-  banner: {
-    backgroundColor: '#161F33',
-    padding: 20,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#00A8FF33',
-    marginBottom: 25,
-  },
-  bannerTitle: {
-    color: '#FFFFFF',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  bannerSub: {
-    color: '#94A3B8',
-    fontSize: 14,
+    letterSpacing: 2,
     marginTop: 5,
-  },
-  sectionTitle: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 15,
   },
   card: {
     backgroundColor: '#161F33',
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 18,
-    borderRadius: 14,
-    marginBottom: 12,
+    padding: 20,
+    borderRadius: 12,
+    width: '100%',
+    marginBottom: 25,
     borderWidth: 1,
-    borderColor: '#1F293D',
-  },
-  cardIcon: {
-    fontSize: 28,
-    marginRight: 15,
-  },
-  cardInfo: {
-    flex: 1,
+    borderColor: '#00A8FF',
   },
   cardTitle: {
     color: '#FFFFFF',
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
+    marginBottom: 8,
+    textAlign: 'center',
   },
-  cardDesc: {
-    color: '#94A3B8',
-    fontSize: 12,
-    marginTop: 2,
+  cardText: {
+    color: '#A0AEC0',
+    fontSize: 14,
+    textAlign: 'center',
   },
-  arrow: {
-    color: '#00A8FF',
-    fontSize: 18,
-  },
-  navBar: {
-    flexDirection: 'row',
-    backgroundColor: '#161F33',
-    borderTopWidth: 1,
-    borderTopColor: '#1F293D',
-    paddingVertical: 15,
-  },
-  navItem: {
-    flex: 1,
+  serviceButton: {
+    backgroundColor: '#111827',
+    padding: 18,
+    borderRadius: 12,
+    width: '100%',
+    marginBottom: 15,
+    borderWidth: 1.5,
     alignItems: 'center',
   },
-  navText: {
-    color: '#94A3B8',
-    fontSize: 14,
-  },
-  activeNavText: {
-    color: '#00A8FF',
-    fontWeight: 'bold',
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
