@@ -4,10 +4,8 @@
     "slug": "Kpath",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./icon.png",
     "userInterfaceStyle": "dark",
     "splash": {
-      "image": "./icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#0B0F19"
     },
@@ -15,10 +13,6 @@
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./icon.png",
-        "backgroundColor": "#0B0F19"
-      },
       "package": "com.kpath.app"
     }
   }
