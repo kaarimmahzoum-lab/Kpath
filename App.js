@@ -7,10 +7,9 @@ import {
 export default function App() {
   const [lang, setLang] = useState('AR'); // AR, FR, EN
   const [activeTab, setActiveTab] = useState('home'); // home, vtc, rental, airbnb, voice
-  const [selectedListing, setSelectedListing] = useState(null);
   const [voiceQuery, setVoiceQuery] = useState('');
 
-  // نصوص التوطين واللغات
+  // Textes multilingues
   const i18n = {
     AR: {
       location: '📍 الدار البيضاء، المغرب',
@@ -25,8 +24,6 @@ export default function App() {
       back: '← العودة للقائمة',
       voicePlaceholder: 'قل شيئاً (مثلاً: احجز لي VTC إلى المعاريف)...',
       listen: 'بدء الاستماع الصوتي 🎧',
-      price: 'السعر',
-      rating: 'التقييم',
     },
     FR: {
       location: '📍 Casablanca, Maroc',
@@ -41,8 +38,6 @@ export default function App() {
       back: '← Retour',
       voicePlaceholder: 'Parlez (ex: Réserver VTC vers Maarif)...',
       listen: 'Activer la voix 🎧',
-      price: 'Prix',
-      rating: 'Note',
     },
     EN: {
       location: '📍 Casablanca, Morocco',
@@ -57,20 +52,18 @@ export default function App() {
       back: '← Back',
       voicePlaceholder: 'Speak (e.g., Book VTC to Maarif)...',
       listen: 'Start Listening 🎧',
-      price: 'Price',
-      rating: 'Rating',
     }
   };
 
   const t = i18n[lang];
 
-  // عقارات بطريقة Airbnb
+  // Anonces hébergements Airbnb
   const airbnbListings = [
     {
       id: 1,
       title: 'فيلا فاخرة بمسبح خاص - عين الذئاب',
       titleEn: 'Luxury Villa with Pool - Anfa',
-      price: '2,500 DH / نهار',
+      price: '2,500 DH / ليلة',
       rating: '⭐ 4.9 (128 تقييم)',
       img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500',
       desc: 'فيلا مطلة على المحيط، 4 غرف نوم، مسبح خاص، حراسة 24/7 وخادمة منزلية.',
@@ -79,7 +72,7 @@ export default function App() {
       id: 2,
       title: 'شقة مودرن مطلة على مسجد الحسن الثاني',
       titleEn: 'Modern Oceanview Apartment',
-      price: '900 DH / نهار',
+      price: '900 DH / ليلة',
       rating: '⭐ 4.8 (85 تقييم)',
       img: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=500',
       desc: 'شقة فاخرة وسط المدينة، أثاث عصري، إنترنت عالي السرعة وموقف سيارات.',
@@ -88,17 +81,12 @@ export default function App() {
 
   const handleVoiceCommand = () => {
     if(!voiceQuery.trim()) return;
-    Alert.alert(
-      'K-Path Voice AI 🎙️',
-      `تم تحليل أمرك الصوتي: "${voiceQuery}"\nجاري تنفيذه فوراً!`
-    );
+    Alert.alert('K-Path Voice AI 🎙️', `Commande analysée : "${voiceQuery}"\nExécution en cours !`);
     setVoiceQuery('');
   };
 
-  // الواجهة الرئيسية
   const renderHome = () => (
     <ScrollView contentContainerStyle={styles.scrollContent}>
-      {/* Header & Language Selector */}
       <View style={styles.topBar}>
         <View style={styles.locationBadge}>
           <Text style={styles.locationText}>{t.location}</Text>
@@ -121,13 +109,11 @@ export default function App() {
         <Text style={styles.subTitle}>{t.subtitle}</Text>
       </View>
 
-      {/* Banner */}
       <View style={styles.bannerCard}>
         <Text style={styles.bannerTitle}>{t.bannerTitle}</Text>
         <Text style={styles.bannerDesc}>{t.bannerDesc}</Text>
       </View>
 
-      {/* Grid Services */}
       <TouchableOpacity style={[styles.serviceCard, { borderColor: '#00A8FF' }]} onPress={() => setActiveTab('vtc')}>
         <Text style={styles.serviceText}>{t.vtc}</Text>
       </TouchableOpacity>
@@ -146,7 +132,6 @@ export default function App() {
     </ScrollView>
   );
 
-  // واجهة Airbnb
   const renderAirbnb = () => (
     <ScrollView contentContainerStyle={styles.scrollContent}>
       <TouchableOpacity style={styles.backBtn} onPress={() => setActiveTab('home')}>
@@ -167,7 +152,7 @@ export default function App() {
             </View>
             <TouchableOpacity 
               style={styles.bookBtn}
-              onPress={() => Alert.alert('K-Path Airbnb', `تم تسجيل طلب حجز: ${item.title}`)}
+              onPress={() => Alert.alert('K-Path Airbnb', `Réservation enregistrée : ${item.title}`)}
             >
               <Text style={styles.bookBtnText}>{t.bookNow}</Text>
             </TouchableOpacity>
@@ -177,7 +162,6 @@ export default function App() {
     </ScrollView>
   );
 
-  // واجهة الأوامر الصوتية
   const renderVoice = () => (
     <View style={styles.voiceContainer}>
       <TouchableOpacity style={styles.backBtn} onPress={() => setActiveTab('home')}>
@@ -189,7 +173,7 @@ export default function App() {
       </View>
 
       <Text style={styles.voiceTitle}>K-Path AI Voice Assistant</Text>
-      <Text style={styles.voiceSub}>تحدث بلغتك الأم، وسيقوم المساعد الذكي بتنفيذ طلبك.</Text>
+      <Text style={styles.voiceSub}>Parlez naturellement, l'assistant s'occupe du reste.</Text>
 
       <TextInput 
         style={styles.voiceInput}
@@ -219,7 +203,7 @@ export default function App() {
           <Text style={styles.sectionHeading}>{activeTab === 'vtc' ? t.vtc : t.rental}</Text>
           <TouchableOpacity 
             style={styles.listenBtn}
-            onPress={() => Alert.alert('K-Path', 'تم الحجز بنجاح!')}
+            onPress={() => Alert.alert('K-Path', 'Réservation réussie !')}
           >
             <Text style={styles.listenBtnText}>{t.bookNow}</Text>
           </TouchableOpacity>
